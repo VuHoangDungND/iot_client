@@ -10,12 +10,4 @@
     width: 100%;
     padding: 0 var(--default-layout-horizontal-spacer);
     margin-top: var(--default-layout-height);
-    display: flex;
-}
-
-.content {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
 }

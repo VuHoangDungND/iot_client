@@ -1,5 +1,11 @@
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { useState } from 'react';
+import classNames from 'classnames/bind';
+
+import Sidebar from './SideBar';
+import styles from './Home.module.scss';
+
+const cx = classNames.bind(styles);
 
 function Home() {
     const test = [
@@ -16,11 +22,11 @@ function Home() {
             status: 3,
         },
         {
-            deviceId: 'ABC123',
+            deviceId: 'ABC12',
             driverId: '',
             time: '2024-01-02T16:09:37Z',
-            latitude: '20.004505',
-            longitude: '106.846474',
+            latitude: '21.004495',
+            longitude: '105.846476',
             locationInfo: 1,
             satelliteNum: 12,
             speed: 0.94,
@@ -29,12 +35,12 @@ function Home() {
         },
     ];
 
-    const center = {
-        lat: parseFloat(test[0].latitude),
-        lng: parseFloat(test[0].longitude),
-    };
+    const [listItem, setListItem] = useState(test);
 
-    const [map, setMap] = useState(null);
+    const center = {
+        lat: parseFloat(test[1].latitude),
+        lng: parseFloat(test[1].longitude),
+    };
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -44,24 +50,26 @@ function Home() {
         return <h2>Loading</h2>;
     }
 
-    const onLoad = (map) => {
-        // This is just an example of getting and using the map instance!!! don't just blindly copy!
-        const bounds = new window.google.maps.LatLngBounds(center);
-        map.fitBounds(bounds);
-
-        setMap(map);
-    };
-
     return (
-        <GoogleMap
-            center={center}
-            zoom={15}
-            mapContainerStyle={{ width: '100%', height: '100%' }}
-            options={{ zoomControl: false, streetViewControl: false, fullscreenControl: false }}
-            onLoad={onLoad}
-        >
-            <Marker position={center} />
-        </GoogleMap>
+        <div className={cx('container')}>
+            <Sidebar list={listItem} setList={setListItem} />
+            <div className={cx('content')}>
+                <GoogleMap
+                    center={center}
+                    zoom={15}
+                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    options={{ zoomControl: false, streetViewControl: false, fullscreenControl: false }}
+                >
+                    {listItem.map((item) => (
+                        <Marker
+                            key={item.deviceId}
+                            position={{ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) }}
+                            title={`Marker ${item.deviceId}`}
+                        />
+                    ))}
+                </GoogleMap>
+            </div>
+        </div>
     );
 }
 
