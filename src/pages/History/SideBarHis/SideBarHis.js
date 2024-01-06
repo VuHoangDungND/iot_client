@@ -86,7 +86,7 @@ function SideBarHis({ setListPoly, setCenter }) {
                             checked={selectedDevice.includes(item.deviceId)}
                             onChange={() => handleChangeDevice(item.deviceId)}
                         />
-                        <label htmlFor={item.deviceId}>{item.deviceId}</label>
+                        <label htmlFor={item.deviceLicensePlates}>{item.deviceLicensePlates}</label>
                     </div>
                 ))}
             </div>

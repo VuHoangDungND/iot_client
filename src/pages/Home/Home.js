@@ -51,6 +51,8 @@ function Home() {
         return <h2>Loading</h2>;
     }
 
+    console.log(listDetail);
+
     return (
         <div className={cx('container')}>
             <Sidebar listDetail={listDetail} setListDetail={setListDetail} />
@@ -68,20 +70,20 @@ function Home() {
                 >
                     {listDetail?.map((item) => (
                         <Marker
-                            key={item.deviceId}
-                            position={{ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) }}
-                            title={`Marker ${item.deviceId}`}
-                            onClick={() => handleMarkerClick(item.deviceId)}
+                            key={item.DeviceId}
+                            position={{ lat: parseFloat(item.Latitude), lng: parseFloat(item.Longitude) }}
+                            title={`Marker ${item.DeviceId}`}
+                            onClick={() => handleMarkerClick(item.DeviceId)}
                         >
-                            {showInfo.show && showInfo.id === item.deviceId && (
-                                <InfoWindow onCloseClick={() => handleMarkerClick(item.deviceId)}>
+                            {showInfo.show && showInfo.id === item.DeviceId && (
+                                <InfoWindow onCloseClick={() => handleMarkerClick(item.DeviceId)}>
                                     <div className={cx('info-box')}>
-                                        <p>ID thiết bị: {item.deviceId}</p>
-                                        <p>Tên thiết bị: {item.deviceName}</p>
-                                        <p>ID người lái: {item.driverId}</p>
-                                        <p>Tên người lái: {item.driverName}</p>
-                                        <p>Trạng thái:{checkStatus(item.status)}</p>
-                                        <p>Thời gian: {checkTime(item.time)}</p>
+                                        <p>ID thiết bị: {item.DeviceId}</p>
+                                        <p>Tên thiết bị: {item.DeviceName}</p>
+                                        <p>ID người lái: {item.DriverId}</p>
+                                        <p>Tên người lái: {item.DriverName}</p>
+                                        <p>Trạng thái:{checkStatus(item.Status)}</p>
+                                        <p>Thời gian: {checkTime(item.Time)}</p>
                                     </div>
                                 </InfoWindow>
                             )}
