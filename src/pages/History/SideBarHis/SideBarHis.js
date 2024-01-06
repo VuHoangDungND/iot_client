@@ -25,6 +25,7 @@ function SideBarHis({ setListPoly, setCenter }) {
         const getTrip = async (deviceId, time) => {
             const res = await axios.get(`${process.env.REACT_APP_BE_API}/Gps`, { params: { deviceId, time } });
             setListTrip(res.data.data);
+            console.log(res.data.data);
         };
         if (selectedDevice.length > 0) getTrip(selectedDevice[0], time);
     }, [selectedDevice, time]);
@@ -63,10 +64,15 @@ function SideBarHis({ setListPoly, setCenter }) {
         }
     };
 
+    const checkTime = (time) => {
+        const formatTime = moment(time).format('h:mm:ss a');
+        return formatTime;
+    };
+
     return (
         <div className={cx('wrapper')}>
-            <div>
-                <label htmlFor="timeInput">Chọn thời gian:</label>
+            <div className={cx('time')}>
+                <label htmlFor="dateInput">Chọn thời gian:</label>
                 <input
                     type="date"
                     id="dateInput"
@@ -79,14 +85,14 @@ function SideBarHis({ setListPoly, setCenter }) {
             </div>
             <div>
                 {listDevice.map((item, index) => (
-                    <div key={index}>
+                    <div key={index} className={cx('device_item')}>
                         <input
                             type="checkbox"
-                            id={index}
+                            id={item.deviceId}
                             checked={selectedDevice.includes(item.deviceId)}
                             onChange={() => handleChangeDevice(item.deviceId)}
                         />
-                        <label htmlFor={item.deviceLicensePlates}>{item.deviceLicensePlates}</label>
+                        <label htmlFor={item.deviceId}>{item.deviceLicensePlates}</label>
                     </div>
                 ))}
             </div>
@@ -94,25 +100,18 @@ function SideBarHis({ setListPoly, setCenter }) {
             <div>
                 <h4>List Trip:</h4>
                 {listTrip.map((item, index) => (
-                    <div key={index}>
+                    <div key={index} className={cx('trip_item')}>
                         <input
                             type="checkbox"
                             id={index}
                             checked={selectedTrip.includes(item)}
                             onChange={() => handleChangeTrip(item)}
                         />
-                        <label htmlFor={item.deviceId}>Trip {index}</label>
+                        <label htmlFor={index}>
+                            {checkTime(item.item1.time)} - {checkTime(item.item2.time)}
+                        </label>
                     </div>
                 ))}
-            </div>
-
-            <div>
-                <h4>Device Selected:</h4>
-                <ul>
-                    {selectedDevice.map((selectedItem) => (
-                        <li key={selectedItem}>{selectedItem}</li>
-                    ))}
-                </ul>
             </div>
         </div>
     );

@@ -1,13 +1,15 @@
 import { useEffect, useState, useRef } from 'react';
+import axios from 'axios';
+import mqtt from 'mqtt';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import classNames from 'classnames/bind';
 import styles from './SideBar.module.scss';
-import axios from 'axios';
-import mqtt from 'mqtt';
+import { faPaperPlane, faQuestion, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 const cx = classNames.bind(styles);
 
-function SideBar({ listDetail, setListDetail }) {
+function SideBar({ listDetail, setListDetail, setCenter }) {
     const [selectedDevices, setSelectedDevices] = useState([]);
     const [listDevice, setListDevice] = useState([]);
     const [mqttConnections, setMqttConnections] = useState([]);
@@ -83,19 +85,35 @@ function SideBar({ listDetail, setListDetail }) {
         setMqttConnections(other);
     };
 
+    const goToMap = (deviceId) => {
+        const seletedMarker = listDetail.filter((tmp) => tmp.DeviceId === deviceId);
+        setCenter({ lat: parseFloat(seletedMarker[0].Latitude), lng: parseFloat(seletedMarker[0].Longitude) });
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div>
-                <h4>Các biển số xe theo dõi</h4>
+                <h3>Các biển số xe theo dõi</h3>
                 {listDevice.map((item, index) => (
-                    <div key={index}>
+                    <div key={index} className={cx('device_item')}>
                         <input
                             type="checkbox"
                             id={index}
                             checked={selectedDevices.includes(item.deviceId)}
                             onChange={() => handleChangeDevice(item.deviceId)}
                         />
-                        <label htmlFor={item.deviceLicensePlates}>{item.deviceLicensePlates}</label>
+                        <label htmlFor={index}>{item.deviceLicensePlates}</label>
+                        <div className={cx('icon')}>
+                            {selectedDevices.includes(item.deviceId) ? (
+                                listDetail.filter((tmp) => tmp.DeviceId === item.deviceId).length > 0 ? (
+                                    <FontAwesomeIcon icon={faPaperPlane} onClick={() => goToMap(item.deviceId)} />
+                                ) : (
+                                    <FontAwesomeIcon icon={faXmark} />
+                                )
+                            ) : (
+                                <FontAwesomeIcon icon={faQuestion} />
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>

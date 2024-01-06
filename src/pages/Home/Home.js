@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import Sidebar from './SideBar';
 import styles from './Home.module.scss';
+import images from '../../assets/images';
 
 const cx = classNames.bind(styles);
 
@@ -51,10 +52,9 @@ function Home() {
         return <h2>Loading</h2>;
     }
 
-    console.log(listDetail);
     return (
         <div className={cx('container')}>
-            <Sidebar listDetail={listDetail} setListDetail={setListDetail} />
+            <Sidebar listDetail={listDetail} setListDetail={setListDetail} setCenter={setCenter} />
             <div className={cx('content')}>
                 <GoogleMap
                     center={center}
@@ -70,8 +70,13 @@ function Home() {
                     {listDetail?.map((item) => (
                         <Marker
                             key={item.DeviceId}
+                            icon={{
+                                url: images.marker,
+                                scaledSize: new window.google.maps.Size(50, 40),
+                                origin: new window.google.maps.Point(0, 0),
+                                anchor: new window.google.maps.Point(20, 40),
+                            }}
                             position={{ lat: parseFloat(item.Latitude), lng: parseFloat(item.Longitude) }}
-                            title={`Marker ${item.DeviceId}`}
                             onClick={() => handleMarkerClick(item.DeviceId)}
                         >
                             {showInfo.show && showInfo.id === item.DeviceId && (
