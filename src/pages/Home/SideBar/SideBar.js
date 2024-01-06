@@ -1,8 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import classNames from 'classnames/bind';
 import styles from './SideBar.module.scss';
-import React, { useState } from 'react';
 import axios from 'axios';
 import mqtt from 'mqtt';
 
@@ -12,9 +11,12 @@ function SideBar({ listDetail, setListDetail }) {
     const [selectedDevices, setSelectedDevices] = useState([]);
     const [listDevice, setListDevice] = useState([]);
     const [mqttConnections, setMqttConnections] = useState([]);
+    const connectionsRef = useRef();
+    connectionsRef.current = mqttConnections;
+
     var options = {
-        username: 'marvelboy',
-        password: 'Qqqqqqq1',
+        username: process.env.REACT_APP_USER_NAME,
+        password: process.env.REACT_APP_PASSWORD,
     };
 
     useEffect(() => {
@@ -23,9 +25,10 @@ function SideBar({ listDetail, setListDetail }) {
             setListDevice(res.data);
         };
         getDevice();
+
+        //Xóa tất cả connect khi unmount
         return () => {
-            // Đóng tất cả các kết nối
-            mqttConnections.forEach((client) => client.end());
+            connectionsRef.current.map((item) => item.client.end());
         };
     }, []);
 
@@ -34,7 +37,7 @@ function SideBar({ listDetail, setListDetail }) {
 
         if (isSelected) {
             setSelectedDevices(selectedDevices.filter((selectedItem) => selectedItem !== item));
-            const list = listDetail.filter((selectedItem) => selectedItem.deviceId !== item);
+            const list = listDetail.filter((selectedItem) => selectedItem.DeviceId !== item);
             setListDetail(list);
             leaveTopic(item);
         } else {
@@ -44,12 +47,10 @@ function SideBar({ listDetail, setListDetail }) {
     };
 
     const joinTopic = (deviceId) => {
-        const client = mqtt.connect('wss://fca1150a13fd455eb1d37dadd06e203e.s2.eu.hivemq.cloud:8884/mqtt', options);
+        const client = mqtt.connect(process.env.REACT_APP_MQTT_BROKER, options);
 
-        // Lắng nghe sự kiện khi kết nối thành công
         client.on('connect', () => {
             console.log(`Connected to MQTT broker for topic: ${deviceId}`);
-            // Đăng ký để nhận các tin nhắn từ topic cụ thể
             client.subscribe(`device/${deviceId}`);
         });
 
@@ -58,7 +59,6 @@ function SideBar({ listDetail, setListDetail }) {
             const byteArray = Array.from(message);
             const jsonString = String.fromCharCode(...byteArray);
             const data = JSON.parse(jsonString);
-            console.log(data);
             if (selectedDevices.includes(data.deviceId)) {
                 const list = listDetail.filter((item) => item.deviceId !== data.deviceId);
                 setListDetail([...list, data]);
@@ -76,17 +76,7 @@ function SideBar({ listDetail, setListDetail }) {
         setMqttConnections([...listConnections, { deviceId: deviceId, client: client }]);
     };
 
-    // connection.on('ReceiveMessage', (data) => {
-    //     console.log(data);
-    //     if (selectedDevices.includes(data.deviceId)) {
-    //         const list = listDetail.filter((item) => item.deviceId !== data.deviceId);
-    //         setListDetail([...list, data]);
-    //     } else {
-    //         setListDetail([...listDetail, data]);
-    //     }
-    // });
-
-    const leaveTopic = async (deviceId) => {
+    const leaveTopic = (deviceId) => {
         const removeClient = mqttConnections.filter((item) => item.deviceId === deviceId);
         removeClient[0].client.end();
         const other = mqttConnections.filter((item) => item.deviceId !== deviceId);
@@ -96,6 +86,7 @@ function SideBar({ listDetail, setListDetail }) {
     return (
         <div className={cx('wrapper')}>
             <div>
+                <h4>Các biển số xe theo dõi</h4>
                 {listDevice.map((item, index) => (
                     <div key={index}>
                         <input
@@ -107,15 +98,6 @@ function SideBar({ listDetail, setListDetail }) {
                         <label htmlFor={item.deviceLicensePlates}>{item.deviceLicensePlates}</label>
                     </div>
                 ))}
-            </div>
-
-            <div>
-                <h4>Selected Device:</h4>
-                <ul>
-                    {selectedDevices.map((selectedItem) => (
-                        <li key={selectedItem}>{selectedItem}</li>
-                    ))}
-                </ul>
             </div>
         </div>
     );

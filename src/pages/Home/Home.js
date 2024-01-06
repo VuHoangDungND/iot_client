@@ -11,11 +11,7 @@ const cx = classNames.bind(styles);
 function Home() {
     const [listDetail, setListDetail] = useState([]);
     const [showInfo, setShowInfo] = useState({ id: '', show: false });
-
-    const center = {
-        lat: parseFloat('21.004494'),
-        lng: parseFloat('105.846466'),
-    };
+    const [center, setCenter] = useState({ lat: parseFloat('21.004494'), lng: parseFloat('105.846466') });
 
     const { isLoaded } = useJsApiLoader({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -29,16 +25,20 @@ function Home() {
         }
     };
 
+    const checkSpeed = (speed) => {
+        return `${speed * 1.8} km/h`;
+    };
+
     const checkStatus = (status) => {
         switch (status) {
             case 1:
-                return 'xe đang di chuyển';
+                return ' Xe đang di chuyển';
             case 2:
-                return 'xe đang dừng';
+                return ' Xe đang dừng';
             case 3:
-                return 'xe đỗ';
+                return ' Xe đỗ';
             default:
-                return 'Trạng thái không xác định';
+                return ' Mất GPS';
         }
     };
 
@@ -52,7 +52,6 @@ function Home() {
     }
 
     console.log(listDetail);
-
     return (
         <div className={cx('container')}>
             <Sidebar listDetail={listDetail} setListDetail={setListDetail} />
@@ -82,6 +81,7 @@ function Home() {
                                         <p>Tên thiết bị: {item.DeviceName}</p>
                                         <p>ID người lái: {item.DriverId}</p>
                                         <p>Tên người lái: {item.DriverName}</p>
+                                        <p>Vận tốc: {checkSpeed(item.Speed)}</p>
                                         <p>Trạng thái:{checkStatus(item.Status)}</p>
                                         <p>Thời gian: {checkTime(item.Time)}</p>
                                     </div>
