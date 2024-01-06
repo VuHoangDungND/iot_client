@@ -20,11 +20,15 @@
 
 .logo-link {
     display: flex;
-    min-width: 300px;
+    min-width: 280px;
 
     img {
-        width: 224px;
+        width: 280px;
         height: 60px;
-        object-fit: cover;
+        object-fit: contain;
     }
+}
+
+.item {
+    text-decoration: none;
 }

@@ -1,42 +1,96 @@
+import { useEffect } from 'react';
+
 import classNames from 'classnames/bind';
 import styles from './SideBar.module.scss';
 import React, { useState } from 'react';
+import axios from 'axios';
 
+const signalR = require('@microsoft/signalr');
 const cx = classNames.bind(styles);
 
-function Sidebar(list, setList) {
-    const [selectedItems, setSelectedItems] = useState([]);
+function SideBar({ listDetail, setListDetail }) {
+    const [selectedDevices, setSelectedDevices] = useState([]);
 
-    console.log(list);
-    const handleCheckboxChange = (item) => {
-        const isSelected = selectedItems.includes(item);
+    const [listDevice, setListDevice] = useState([]);
+
+    useEffect(() => {
+        const getDevice = async () => {
+            const res = await axios.get(`${process.env.REACT_APP_BE_API}/Device`);
+            setListDevice(res.data);
+        };
+        getDevice();
+    }, []);
+
+    const handleChangeDevice = (item) => {
+        const isSelected = selectedDevices.includes(item);
 
         if (isSelected) {
-            setSelectedItems(selectedItems.filter((selectedItem) => selectedItem !== item));
+            setSelectedDevices(selectedDevices.filter((selectedItem) => selectedItem !== item));
+            const list = listDetail.filter((selectedItem) => selectedItem.deviceId !== item);
+            setListDetail(list);
+            leaveChannel(item);
         } else {
-            setSelectedItems([...selectedItems, item]);
+            setSelectedDevices([...selectedDevices, item]);
+            joinChannel(item);
         }
     };
+
+    let connection = new signalR.HubConnectionBuilder()
+        .withUrl(`http://gps-iot.somee.com/current-location`, {
+            withCredentials: false,
+        })
+        .build();
+
+    const joinChannel = (deviceId) => {
+        connection
+            .start()
+            .then(() => {
+                console.log(`connected ${deviceId}`);
+
+                connection.invoke('JoinChannel', deviceId).catch((err) => console.log(err));
+            })
+            .catch((error) => {
+                console.error(`SignalR connection failed: ${error}`);
+            });
+    };
+
+    connection.on('ReceiveMessage', (data) => {
+        console.log(data);
+        if (selectedDevices.includes(data.deviceId)) {
+            const list = listDetail.filter((item) => item.deviceId !== data.deviceId);
+            setListDetail([...list, data]);
+        } else {
+            setListDetail([...listDetail, data]);
+        }
+    });
+
+    const leaveChannel = async (deviceId) => {
+        if (connection.state === signalR.HubConnectionState.Connected) {
+            // Ngừng gửi dữ liệu
+            connection.invoke('LeaveChannel', deviceId);
+        }
+    };
+
     return (
         <div className={cx('wrapper')}>
             <div>
-                {list.map((item, index) => (
+                {listDevice.map((item, index) => (
                     <div key={index}>
                         <input
                             type="checkbox"
                             id={index}
-                            checked={selectedItems.includes(item.deviceId)}
-                            onChange={() => handleCheckboxChange(item.deviceId)}
+                            checked={selectedDevices.includes(item.deviceId)}
+                            onChange={() => handleChangeDevice(item.deviceId)}
                         />
-                        <label htmlFor={item}>{item}</label>
+                        <label htmlFor={item.deviceId}>{item.deviceId}</label>
                     </div>
                 ))}
             </div>
 
             <div>
-                <h4>Selected Items:</h4>
+                <h4>Selected Device:</h4>
                 <ul>
-                    {selectedItems.map((selectedItem) => (
+                    {selectedDevices.map((selectedItem) => (
                         <li key={selectedItem}>{selectedItem}</li>
                     ))}
                 </ul>
@@ -45,4 +99,4 @@ function Sidebar(list, setList) {
     );
 }
 
-export default Sidebar;
+export default SideBar;
