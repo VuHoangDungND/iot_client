@@ -27,7 +27,8 @@ function Home() {
     };
 
     const checkSpeed = (speed) => {
-        return `${speed * 1.8} km/h`;
+        const convertedSpeed = (speed * 1.8).toFixed(2);
+        return `${convertedSpeed * 1.8} km/h`;
     };
 
     const checkStatus = (status) => {
@@ -46,6 +47,10 @@ function Home() {
     const checkTime = (time) => {
         const formatTime = moment(time).format('h:mm:ss a DD/MM/YYYY');
         return formatTime;
+    };
+
+    const checkLocationInfo = (data) => {
+        return `${data} dB`;
     };
 
     const loadMarker = (status) => {
@@ -72,7 +77,7 @@ function Home() {
                 <GoogleMap
                     center={center}
                     zoom={16}
-                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    mapContainerStyle={{ width: '100%', height: '100%', borderRadius: '16px' }}
                     options={{
                         zoomControl: false,
                         streetViewControl: false,
@@ -95,13 +100,14 @@ function Home() {
                             {showInfo.show && showInfo.id === item.DeviceId && (
                                 <InfoWindow onCloseClick={() => handleMarkerClick(item.DeviceId)}>
                                     <div className={cx('info-box')}>
-                                        <p>ID thiết bị: {item.DeviceId}</p>
+                                        <p>Biển số xe: {item.DeviceLicensePlates}</p>
                                         <p>Tên thiết bị: {item.DeviceName}</p>
-                                        <p>ID người lái: {item.DriverId}</p>
-                                        <p>Tên người lái: {item.DriverName}</p>
+                                        <p>Trạng thái thiết bị:{checkStatus(item.Status)}</p>
                                         <p>Vận tốc: {checkSpeed(item.Speed)}</p>
-                                        <p>Trạng thái:{checkStatus(item.Status)}</p>
+                                        <p>Sóng: {checkLocationInfo(item.LocationInfo)}</p>
                                         <p>Thời gian: {checkTime(item.Time)}</p>
+                                        <p>Tên người lái: {item.DriverName}</p>
+                                        <p>Số hiệu bằng lái xe người lái: {item.DriverLicense}</p>
                                     </div>
                                 </InfoWindow>
                             )}

@@ -15,8 +15,12 @@ function Header() {
                     <img src={images.logo} alt="30sVideo" />
                 </Link>
 
+                <Link to={config.routes.home} className={cx('item')}>
+                    Giám sát trực tuyến
+                </Link>
+
                 <Link to={config.routes.history} className={cx('item')}>
-                    History Trip
+                    Lịch sử chuyến đi
                 </Link>
             </div>
         </header>

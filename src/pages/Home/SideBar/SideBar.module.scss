@@ -3,11 +3,22 @@
     min-height: 100%;
 }
 
+h2 {
+    margin: 10px;
+}
+
+.line {
+    background: black;
+    height: 1px;
+    width: calc(100% - 24px);
+}
+
 .device_item {
     margin: 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    width: calc(100% - 34px);
 
     input[type='checkbox'] {
         display: none;
@@ -15,7 +26,7 @@
 
     label {
         cursor: pointer;
-        font-size: 24px;
+        font-size: 12px;
         width: 200px;
         padding: 8px 8px;
         border-width: 1px;
@@ -40,7 +51,7 @@
 
 .icon {
     cursor: pointer;
-    padding: 14px;
+    padding: 5px;
     border-radius: 25px;
     border: 1px solid #e8e8e8;
 }

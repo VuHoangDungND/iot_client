@@ -104,7 +104,9 @@ function SideBar({ listDetail, setListDetail, setCenter }) {
     return (
         <div className={cx('wrapper')}>
             <div>
-                <h3>Các biển số xe theo dõi</h3>
+                <h2>Giám sát trực tuyến</h2>
+                <div className={cx('line')}></div>
+                <h4>Danh sách các xe:</h4>
                 {listDevice.map((item, index) => (
                     <div key={index} className={cx('device_item')}>
                         <input

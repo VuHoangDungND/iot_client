@@ -70,8 +70,10 @@ function SideBarHis({ setListPoly, setCenter }) {
 
     return (
         <div className={cx('wrapper')}>
+            <h2>Lịch sử chuyến đi</h2>
+            <div className={cx('line')}></div>
             <div className={cx('time')}>
-                <label htmlFor="dateInput">Chọn thời gian:</label>
+                <h4>Chọn thời gian:</h4>
                 <input
                     type="date"
                     id="dateInput"
@@ -82,6 +84,7 @@ function SideBarHis({ setListPoly, setCenter }) {
                     }}
                 />
             </div>
+            <h4>Danh sách các xe:</h4>
             <div>
                 {listDevice.map((item, index) => (
                     <div key={index} className={cx('device_item')}>
@@ -97,7 +100,7 @@ function SideBarHis({ setListPoly, setCenter }) {
             </div>
 
             <div>
-                <h4>List Trip:</h4>
+                <h4>Danh sách chuyến đi:</h4>
                 {listTrip.map((item, index) => (
                     <div key={index} className={cx('trip_item')}>
                         <input
@@ -107,7 +110,8 @@ function SideBarHis({ setListPoly, setCenter }) {
                             onChange={() => handleChangeTrip(item)}
                         />
                         <label htmlFor={index}>
-                            {checkTime(item.item1.time)} - {checkTime(item.item2.time)}
+                            <div className={cx('item_time')}>{checkTime(item.item1.time)}</div> -
+                            <div className={cx('item_time')}>{checkTime(item.item2.time)}</div>
                         </label>
                     </div>
                 ))}

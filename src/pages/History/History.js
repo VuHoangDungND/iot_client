@@ -20,32 +20,36 @@ function History() {
     });
 
     const renderPolylines = () => {
-        const polylines = [];
+        const arrowPath = [];
 
-        for (let i = 0; i < listPoly.length - 1; i++) {
-            const startPoint = {
+        for (let i = 0; i < listPoly.length; i++) {
+            const path = {
                 lat: parseFloat(listPoly[i].latitude),
                 lng: parseFloat(listPoly[i].longitude),
             };
-            const endPoint = {
-                lat: parseFloat(listPoly[i + 1].latitude),
-                lng: parseFloat(listPoly[i + 1].longitude),
-            };
-
-            const polyline = (
-                <Polyline
-                    key={i}
-                    path={[startPoint, endPoint]}
-                    options={{
-                        strokeColor: '#FF0000',
-                        strokeOpacity: 1,
-                        strokeWeight: 2,
-                    }}
-                />
-            );
-
-            polylines.push(polyline);
+            arrowPath.push(path);
         }
+
+        const polylines = (
+            <Polyline
+                path={arrowPath}
+                options={{
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 1.0,
+                    strokeWeight: 2,
+                    icons: [
+                        {
+                            icon: {
+                                path: window.google.maps.SymbolPath.FORWARD_CLOSED_ARROW,
+                            },
+                            offset: '50%',
+                            repeat: '100px',
+                            fillColor: 'blue',
+                        },
+                    ],
+                }}
+            />
+        );
 
         return polylines;
     };
@@ -61,7 +65,7 @@ function History() {
                 <GoogleMap
                     center={center}
                     zoom={16}
-                    mapContainerStyle={{ width: '100%', height: '100%' }}
+                    mapContainerStyle={{ width: '100%', height: '100%', borderRadius: '16px' }}
                     options={{
                         zoomControl: false,
                         streetViewControl: false,
