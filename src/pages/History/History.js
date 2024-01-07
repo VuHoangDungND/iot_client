@@ -83,6 +83,8 @@ function History() {
                                 <p>Biển số xe: {listPoly[i].deviceLicensePlates}</p>
                                 <p>Tên thiết bị: {listPoly[i].deviceName}</p>
                                 <p>Trạng thái thiết bị:{checkStatus(listPoly[i].status)}</p>
+                                <p>Kinh độ: {listPoly[i].longitude}</p>
+                                <p>Vĩ độ: {listPoly[i].latitude} </p>
                                 <p>Vận tốc: {checkSpeed(listPoly[i].speed)}</p>
                                 <p>Sóng: {checkLocationInfo(listPoly[i].locationInfo)}</p>
                                 <p>Thời gian: {checkTime(listPoly[i].time)}</p>

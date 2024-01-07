@@ -103,6 +103,8 @@ function Home() {
                                         <p>Biển số xe: {item.DeviceLicensePlates}</p>
                                         <p>Tên thiết bị: {item.DeviceName}</p>
                                         <p>Trạng thái thiết bị:{checkStatus(item.Status)}</p>
+                                        <p>Kinh độ: {item.Longitude}</p>
+                                        <p>Vĩ độ: {item.Latitude} </p>
                                         <p>Vận tốc: {checkSpeed(item.Speed)}</p>
                                         <p>Sóng: {checkLocationInfo(item.LocationInfo)}</p>
                                         <p>Thời gian: {checkTime(item.Time)}</p>
