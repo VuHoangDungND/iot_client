@@ -65,8 +65,6 @@ function Home() {
         return <h2>Loading</h2>;
     }
 
-    console.log(listDetail);
-
     return (
         <div className={cx('container')}>
             <Sidebar listDetail={listDetail} setListDetail={setListDetail} setCenter={setCenter} />
