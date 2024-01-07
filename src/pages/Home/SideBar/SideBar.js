@@ -61,11 +61,22 @@ function SideBar({ listDetail, setListDetail, setCenter }) {
             const byteArray = Array.from(message);
             const jsonString = String.fromCharCode(...byteArray);
             const data = JSON.parse(jsonString);
-            if (selectedDevices.includes(data.deviceId)) {
-                const list = listDetail.filter((item) => item.deviceId !== data.deviceId);
-                setListDetail([...list, data]);
+            console.log(data);
+            if (data.Error) {
+                if (selectedDevices.includes(data.RecentLocation.DeviceId)) {
+                    const list = listDetail.filter((item) => item.deviceId !== data.RecentLocation.DeviceId);
+                    setListDetail([...list, data.RecentLocation]);
+                } else {
+                    const loseGps = { ...data.RecentLocation, Status: 4 };
+                    setListDetail([...listDetail, loseGps]);
+                }
             } else {
-                setListDetail([...listDetail, data]);
+                if (selectedDevices.includes(data.DeviceId)) {
+                    const list = listDetail.filter((item) => item.deviceId !== data.DeviceId);
+                    setListDetail([...list, data]);
+                } else {
+                    setListDetail([...listDetail, data]);
+                }
             }
         });
 

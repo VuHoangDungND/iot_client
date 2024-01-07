@@ -25,7 +25,6 @@ function SideBarHis({ setListPoly, setCenter }) {
         const getTrip = async (deviceId, time) => {
             const res = await axios.get(`${process.env.REACT_APP_BE_API}/Gps`, { params: { deviceId, time } });
             setListTrip(res.data.data);
-            console.log(res.data.data);
         };
         if (selectedDevice.length > 0) getTrip(selectedDevice[0], time);
     }, [selectedDevice, time]);

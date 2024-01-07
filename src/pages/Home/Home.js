@@ -48,9 +48,24 @@ function Home() {
         return formatTime;
     };
 
+    const loadMarker = (status) => {
+        switch (status) {
+            case 1:
+                return images.car1;
+            case 2:
+                return images.car2;
+            case 3:
+                return images.car2;
+            default:
+                return images.car3;
+        }
+    };
+
     if (!isLoaded) {
         return <h2>Loading</h2>;
     }
+
+    console.log(listDetail);
 
     return (
         <div className={cx('container')}>
@@ -71,8 +86,8 @@ function Home() {
                         <Marker
                             key={item.DeviceId}
                             icon={{
-                                url: images.marker,
-                                scaledSize: new window.google.maps.Size(50, 40),
+                                url: loadMarker(item.Status),
+                                scaledSize: new window.google.maps.Size(40, 40),
                                 origin: new window.google.maps.Point(0, 0),
                                 anchor: new window.google.maps.Point(20, 40),
                             }}
