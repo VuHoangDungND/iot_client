@@ -68,8 +68,6 @@ function History() {
             };
             arrowPath.push(path);
 
-            console.log(listPoly[i]);
-
             const marker = (
                 <Marker
                     key={listPoly[i].time}
