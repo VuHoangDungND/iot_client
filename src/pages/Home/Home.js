@@ -28,7 +28,7 @@ function Home() {
 
     const checkSpeed = (speed) => {
         const convertedSpeed = (speed * 1.8).toFixed(2);
-        return `${convertedSpeed * 1.8} km/h`;
+        return `${convertedSpeed} km/h`;
     };
 
     const checkStatus = (status) => {
