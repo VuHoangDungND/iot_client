@@ -24,8 +24,10 @@ function SideBarHis({ setListPoly, setCenter }) {
     useEffect(() => {
         const getTrip = async (deviceId, time) => {
             const res = await axios.get(`${process.env.REACT_APP_BE_API}/Gps`, { params: { deviceId, time } });
+            console.log(res.data.data);
             setListTrip(res.data.data);
         };
+
         if (selectedDevice.length > 0) getTrip(selectedDevice[0], time);
     }, [selectedDevice, time]);
 
@@ -68,6 +70,7 @@ function SideBarHis({ setListPoly, setCenter }) {
         return formatTime;
     };
 
+    console.log(listTrip);
     return (
         <div className={cx('wrapper')}>
             <h2>Lịch sử chuyến đi</h2>
